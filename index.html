@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cross-Shop Referral & Secure Partner Portal</title>
+  <title>Cross-Shop Referral & Commission Management System</title>
   
   <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -19,19 +19,20 @@
     const translations = {
       si: {
         appTitle: "සාප්පු හවුල්කාර හා කොමිස් කළමනාකරණ පද්ධතිය",
+        appSubTitle: "පූර්ණ උසස් කළමනාකරණ සහ හවුල්කාර ද්වාරය",
         adminLoginTitle: "ප්‍රධාන සාප්පු පරිපාලක පිවිසුම (Admin Login)",
         partnerLoginTitle: "හවුල්කාර සාප්පු පිවිසුම (Partner Portal Login)",
-        username: "පරිශීලක නාමය (Username)",
-        password: "මුරපදය (Password)",
-        loginBtn: "පද්ධතියට පිවිසෙන්න (Login)",
-        logoutBtn: "ඉවත් වන්න (Logout)",
+        username: "පරිශීලක නාමය",
+        password: "මුරපදය",
+        loginBtn: "පද්ධතියට පිවිසෙන්න",
+        logoutBtn: "ඉවත් වන්න",
         loginError: "වැරදි පරිශීලක නාමයක් හෝ මුරපදයකි!",
         dashboardTab: "ඩෑෂ්බෝඩ් (Dashboard)",
         addJobTab: "නව ජොබ් එකක් එක් කරන්න",
-        categoriesTab: "වර්ගීකරණය (Categories)",
-        catalogTab: "සේවා සහ භාණ්ඩ",
+        categoriesTab: "ප්‍රධාන වර්ග (Categories)",
+        subCategoriesTab: "උප වර්ග (Sub-Categories)",
+        catalogTab: "සේවා සහ භාණ්ඩ (Items & Catalog)",
         shopsTab: "හවුල්කාර සාප්පු",
-        settlementsTab: "ගෙවීම් නිරවුල් කිරීම්",
         historyTab: "ගනුදෙනු වාර්තා (Job History)",
         adminOwedTotal: "හවුල්කරුවන්ට ගෙවීමට ඇති මුළු කොමිස්",
         adminNetProfit: "මගේ ශුද්ධ ලාභය (Admin Net Profit)",
@@ -44,10 +45,23 @@
         contactPerson: "සම්බන්ධීකාරක නම",
         phone: "දුරකථන අංකය",
         defaultCommRate: "පෙරනිමි කොමිස් %",
-        saveShopBtn: "සාප්පුව ලියාපදිංචි කර Login Passwords ලබාදෙන්න",
-        generatedCredentials: "සාදන ලද පිවිසුම් විස්තර (Login Credentials):",
-        copyCreds: "විස්තර කොපි කරන්න",
-        partnerAddJobTitle: "ඔබේ සාප්පුවෙන් පාරිභෝගිකයෙකු යොමු කරන්න (Add Referral Job)",
+        saveShopBtn: "සාප්පුව ලියාපදිංචි කරන්න",
+        addCatTitle: "නව ප්‍රධාන වර්ගයක් එකතු කරන්න",
+        catNameLabel: "ප්‍රධාන වර්ගයේ නම",
+        catDescLabel: "විස්තරය",
+        catSaveBtn: "ප්‍රධාන වර්ගය සුරකින්න",
+        addSubCatTitle: "නව උප වර්ගයක් (Sub-Category) එකතු කරන්න",
+        selectCategory: "ප්‍රධාන වර්ගය තෝරන්න",
+        subCatNameLabel: "උප වර්ගයේ නම",
+        subCatSaveBtn: "උප වර්ගය සුරකින්න",
+        addCatalogTitle: "නව සේවාවක් / භාණ්ඩයක් සහ කොමිස් මුදල එකතු කරන්න",
+        selectShopForCatalog: "අදාළ සාප්පුව",
+        selectSubCategory: "උප වර්ගය තෝරන්න",
+        itemName: "සේවාවේ / භාණ්ඩයේ නම",
+        basePrice: "පාරිභෝගික ගාස්තුව (Rs.)",
+        itemCommRate: "කොමිස් ප්‍රතිශතය (% හෝ මුදල)",
+        catalogSaveBtn: "භාණ්ඩය / සේවාව සුරකින්න",
+        shopServicesTitle: "සාප්පුවල සේවා සහ භාණ්ඩ ලැයිස්තුව",
         customerName: "පාරිභෝගිකයාගේ නම",
         jobDesc: "කාර්යයේ විස්තරය",
         totalCharged: "පාරිභෝගිකයාගෙන් අය කළ මුදල (Rs.)",
@@ -55,13 +69,75 @@
         actions: "ක්‍රියාමාර්ග",
         custBill: "පාරිභෝගික ගාස්තුව:",
         partnerCommLabel: "කොමිස් මුදල:",
-        myProfitLabel: "ශුද්ධ ලාභය:"
+        myProfitLabel: "ශුද්ධ ලාභය:",
+        searchPlaceholder: "පාරිභෝගිකයා, සේවාව හෝ දුරකථන අංකයෙන් සොයන්න..."
+      },
+      en: {
+        appTitle: "Cross-Shop Referral & Commission System",
+        appSubTitle: "Advanced Management & Partner Portal",
+        adminLoginTitle: "Main Shop Admin Login",
+        partnerLoginTitle: "Partner Shop Portal Login",
+        username: "Username",
+        password: "Password",
+        loginBtn: "Login to System",
+        logoutBtn: "Logout",
+        loginError: "Invalid username or password!",
+        dashboardTab: "Dashboard",
+        addJobTab: "Add New Job",
+        categoriesTab: "Categories",
+        subCategoriesTab: "Sub-Categories",
+        catalogTab: "Goods & Services",
+        shopsTab: "Partner Shops",
+        historyTab: "Job History",
+        adminOwedTotal: "Total Commission Owed to Partners",
+        adminNetProfit: "Admin Net Profit",
+        totalJobsRecorded: "Total Referral Jobs",
+        partnerEarnedTotal: "Pending Commission to Receive",
+        partnerCompletedJobs: "Completed Jobs",
+        partnerSettlementTotal: "Total Received to Date",
+        addNewsShop: "Register New Partner Shop",
+        shopName: "Shop Name",
+        contactPerson: "Contact Person",
+        phone: "Phone Number",
+        defaultCommRate: "Default Commission %",
+        saveShopBtn: "Register Partner Shop",
+        addCatTitle: "Add Main Category",
+        catNameLabel: "Category Name",
+        catDescLabel: "Description",
+        catSaveBtn: "Save Category",
+        addSubCatTitle: "Add Sub-Category",
+        selectCategory: "Select Main Category",
+        subCatNameLabel: "Sub-Category Name",
+        subCatSaveBtn: "Save Sub-Category",
+        addCatalogTitle: "Add Item, Price & Commission Payout",
+        selectShopForCatalog: "Select Partner Shop",
+        selectSubCategory: "Select Sub-Category",
+        itemName: "Service / Item Name",
+        basePrice: "Customer Price (Rs.)",
+        itemCommRate: "Commission % Rate",
+        catalogSaveBtn: "Save Item & Commission",
+        shopServicesTitle: "Goods & Services Catalog",
+        customerName: "Customer Name",
+        jobDesc: "Job Description",
+        totalCharged: "Customer Bill (Rs.)",
+        saveJobBtn: "Submit Job Referral",
+        actions: "Actions",
+        custBill: "Customer Price:",
+        partnerCommLabel: "Commission Payout:",
+        myProfitLabel: "Net Profit:",
+        searchPlaceholder: "Search customer, service or phone..."
       }
     };
 
     const initialCategories = [
-      { id: 'cat_1', name: 'Mobile Repair', description: 'Display replacement' },
-      { id: 'cat_2', name: 'Computer & Laptop', description: 'Motherboard repair' }
+      { id: 'cat_1', name: 'Mobile Repair', description: 'Phone hardware & software fixes' },
+      { id: 'cat_2', name: 'Computer & Laptop', description: 'Laptop & PC maintenance' }
+    ];
+
+    const initialSubCategories = [
+      { id: 'sub_1', categoryId: 'cat_1', name: 'Display & Touch' },
+      { id: 'sub_2', categoryId: 'cat_1', name: 'Battery & Charging' },
+      { id: 'sub_3', categoryId: 'cat_2', name: 'Motherboard Repair' }
     ];
 
     const initialShops = [
@@ -69,8 +145,13 @@
       { id: 'shop_2', name: 'Micro Tech', contactPerson: 'Sunil', phone: '0714445566', defaultCommRate: 15, username: 'micro456', password: 'pw_micro_88' }
     ];
 
+    const initialCatalog = [
+      { id: 'item_1', shopId: 'shop_1', categoryId: 'cat_1', subCategoryId: 'sub_1', name: 'Samsung Original Display Replacement', basePrice: 15000, commType: 'PERCENT', commValue: 12, payoutAmount: 1800 },
+      { id: 'item_2', shopId: 'shop_2', categoryId: 'cat_2', subCategoryId: 'sub_3', name: 'Laptop Chip Level Motherboard Repair', basePrice: 12000, commType: 'FIXED', commValue: 1500, payoutAmount: 1500 }
+    ];
+
     const initialTransactions = [
-      { id: 'tx_1', shopId: 'shop_1', customerName: 'Nimal Jayasinghe', phone: '0779876543', description: 'Display Replacement', totalCharged: 15000, myCost: 8000, payoutToOther: 1500, jobStatus: 'COMPLETED', isSettled: false, date: '2026-10-25' }
+      { id: 'tx_1', shopId: 'shop_1', customerName: 'Nimal Jayasinghe', phone: '0779876543', description: 'Samsung Original Display Replacement', totalCharged: 15000, myCost: 8000, payoutToOther: 1800, jobStatus: 'COMPLETED', isSettled: false, date: '2026-10-25' }
     ];
 
     function App() {
@@ -78,15 +159,14 @@
       const t = translations[lang];
 
       const [categories, setCategories] = useState(() => JSON.parse(localStorage.getItem('app_categories')) || initialCategories);
+      const [subCategories, setSubCategories] = useState(() => JSON.parse(localStorage.getItem('app_sub_categories')) || initialSubCategories);
       const [shops, setShops] = useState(() => JSON.parse(localStorage.getItem('app_shops')) || initialShops);
+      const [catalogItems, setCatalogItems] = useState(() => JSON.parse(localStorage.getItem('app_catalog_items')) || initialCatalog);
       const [transactions, setTransactions] = useState(() => JSON.parse(localStorage.getItem('app_transactions')) || initialTransactions);
-      const [settlements, setSettlements] = useState(() => JSON.parse(localStorage.getItem('app_settlements')) || []);
-
-      // Auth state: role can be 'GUEST_ADMIN', 'GUEST_PARTNER', 'ADMIN', or 'PARTNER'
-      const [authRole, setAuthRole] = useState('GUEST_ADMIN'); // Default start login screen
+      
+      const [authRole, setAuthRole] = useState('GUEST_ADMIN');
       const [loggedInShopId, setLoggedInShopId] = useState(null);
 
-      // Login form inputs
       const [loginUser, setLoginUser] = useState('');
       const [loginPass, setLoginPass] = useState('');
       const [loginError, setLoginError] = useState('');
@@ -94,26 +174,70 @@
       const [activeTab, setActiveTab] = useState('dashboard');
       const [searchQuery, setSearchQuery] = useState('');
 
-      // New Shop Form with auto password generator
+      const [newCat, setNewCat] = useState({ name: '', description: '' });
+      const [newSubCat, setNewSubCat] = useState({ categoryId: categories[0]?.id || '', name: '' });
       const [newShop, setNewShop] = useState({ name: '', contactPerson: '', phone: '', defaultCommRate: 10 });
-      const [lastCreatedCreds, setLastCreatedCreds] = useState(null);
 
-      // Partner/Admin Add Job Form
+      const [newCatalog, setNewCatalog] = useState({
+        shopId: shops[0]?.id || '',
+        categoryId: categories[0]?.id || '',
+        subCategoryId: '',
+        name: '',
+        basePrice: '',
+        commType: 'PERCENT',
+        commValue: 10,
+        payoutAmount: 0
+      });
+
+      const [selectedCategory, setSelectedCategory] = useState('');
+      const [selectedSubCategory, setSelectedSubCategory] = useState('');
+
+      // Job form state including custom commission configuration support
       const [jobForm, setJobForm] = useState({
+        shopId: shops[0]?.id || '',
+        itemId: '',
         customerName: '',
         phone: '',
         description: '',
         totalCharged: '',
         myCost: 0,
-        commRate: 10
+        commType: 'PERCENT',
+        commValue: 10,
+        payoutAmount: 0
       });
 
       useEffect(() => { localStorage.setItem('app_categories', JSON.stringify(categories)); }, [categories]);
+      useEffect(() => { localStorage.setItem('app_sub_categories', JSON.stringify(subCategories)); }, [subCategories]);
       useEffect(() => { localStorage.setItem('app_shops', JSON.stringify(shops)); }, [shops]);
+      useEffect(() => { localStorage.setItem('app_catalog_items', JSON.stringify(catalogItems)); }, [catalogItems]);
       useEffect(() => { localStorage.setItem('app_transactions', JSON.stringify(transactions)); }, [transactions]);
-      useEffect(() => { localStorage.setItem('app_settlements', JSON.stringify(settlements)); }, [settlements]);
 
-      // Admin Login Handler
+      // Catalog commission calculation
+      useEffect(() => {
+        const price = parseFloat(newCatalog.basePrice) || 0;
+        const val = parseFloat(newCatalog.commValue) || 0;
+        let calculated = 0;
+        if (newCatalog.commType === 'PERCENT') {
+          calculated = Math.round((price * val) / 100);
+        } else {
+          calculated = val;
+        }
+        setNewCatalog(prev => ({ ...prev, payoutAmount: calculated }));
+      }, [newCatalog.basePrice, newCatalog.commType, newCatalog.commValue]);
+
+      // Job form commission calculation (when custom item / manual entry)
+      useEffect(() => {
+        const price = parseFloat(jobForm.totalCharged) || 0;
+        const val = parseFloat(jobForm.commValue) || 0;
+        let calculated = 0;
+        if (jobForm.commType === 'PERCENT') {
+          calculated = Math.round((price * val) / 100);
+        } else {
+          calculated = val;
+        }
+        setJobForm(prev => ({ ...prev, payoutAmount: calculated }));
+      }, [jobForm.totalCharged, jobForm.commType, jobForm.commValue]);
+
       const handleAdminLogin = (e) => {
         e.preventDefault();
         if (loginUser === 'admin' && loginPass === 'admin123') {
@@ -126,7 +250,6 @@
         }
       };
 
-      // Partner Login Handler
       const handlePartnerLogin = (e) => {
         e.preventDefault();
         const foundShop = shops.find(s => s.username === loginUser && s.password === loginPass);
@@ -141,13 +264,26 @@
         }
       };
 
-      // Auto Generate Shop with Username & Password
-      const handleAddShopWithCreds = (e) => {
+      const handleAddCategory = (e) => {
+        e.preventDefault();
+        if (!newCat.name.trim()) return;
+        setCategories([...categories, { id: 'cat_' + Date.now(), ...newCat }]);
+        setNewCat({ name: '', description: '' });
+      };
+
+      const handleAddSubCategory = (e) => {
+        e.preventDefault();
+        if (!newSubCat.name.trim() || !newSubCat.categoryId) return;
+        setSubCategories([...subCategories, { id: 'sub_' + Date.now(), ...newSubCat }]);
+        setNewSubCat({ categoryId: categories[0]?.id || '', name: '' });
+      };
+
+      const handleAddShop = (e) => {
         e.preventDefault();
         if (!newShop.name.trim()) return;
         const shopId = 'shop_' + Date.now();
         const username = newShop.name.toLowerCase().replace(/[^a-z0-9]/g, '').slice(0, 6) + Math.floor(100 + Math.random() * 900);
-        const password = 'pw_' + Math.random().toString(36.slice(-6));
+        const password = 'pw_' + Math.random().toString(36).substring(2, 8);
 
         const createdShop = {
           id: shopId,
@@ -158,18 +294,61 @@
         };
 
         setShops([...shops, createdShop]);
-        setLastCreatedCreds(createdShop);
         setNewShop({ name: '', contactPerson: '', phone: '', defaultCommRate: 10 });
       };
 
-      // Add Job Handler (Admin can pick shop, Partner auto uses their shopId)
+      const handleAddCatalogItem = (e) => {
+        e.preventDefault();
+        if (!newCatalog.name.trim() || !newCatalog.shopId) return;
+        setCatalogItems([...catalogItems, {
+          id: 'item_' + Date.now(),
+          ...newCatalog,
+          basePrice: parseFloat(newCatalog.basePrice) || 0,
+          payoutAmount: parseFloat(newCatalog.payoutAmount) || 0
+        }]);
+        setNewCatalog({
+          shopId: authRole === 'PARTNER' ? loggedInShopId : (shops[0]?.id || ''),
+          categoryId: categories[0]?.id || '',
+          subCategoryId: '',
+          name: '',
+          basePrice: '',
+          commType: 'PERCENT',
+          commValue: 10,
+          payoutAmount: 0
+        });
+      };
+
+      const handleCatalogSelect = (itemId) => {
+        if (!itemId) {
+          setJobForm(prev => ({ ...prev, itemId: '', description: '', totalCharged: '', payoutAmount: 0 }));
+          return;
+        }
+        const selected = catalogItems.find(c => c.id === itemId);
+        if (selected) {
+          setJobForm(prev => ({
+            ...prev,
+            itemId: selected.id,
+            description: selected.name,
+            totalCharged: selected.basePrice,
+            commType: selected.commType || 'PERCENT',
+            commValue: selected.commValue || 10,
+            payoutAmount: selected.payoutAmount || 0
+          }));
+        }
+      };
+
       const handleAddJobSubmit = (e) => {
         e.preventDefault();
         const targetShopId = authRole === 'ADMIN' ? jobForm.shopId || shops[0]?.id : loggedInShopId;
-        const shopObj = shops.find(s => s.id === targetShopId);
-        const commRate = shopObj ? shopObj.defaultCommRate : 10;
+        const selectedItem = catalogItems.find(i => i.id === jobForm.itemId);
+        
+        let finalPayout = 0;
         const total = parseFloat(jobForm.totalCharged) || 0;
-        const payout = Math.round((total * commRate) / 100);
+        if (selectedItem) {
+          finalPayout = selectedItem.payoutAmount;
+        } else {
+          finalPayout = jobForm.payoutAmount;
+        }
 
         const newTx = {
           id: 'tx_' + Date.now(),
@@ -179,28 +358,39 @@
           description: jobForm.description,
           totalCharged: total,
           myCost: parseFloat(jobForm.myCost) || 0,
-          payoutToOther: payout,
+          payoutToOther: finalPayout,
           jobStatus: 'COMPLETED',
           isSettled: false,
           date: new Date().toISOString().split('T')[0]
         };
 
         setTransactions([newTx, ...transactions]);
-        setJobForm({ customerName: '', phone: '', description: '', totalCharged: '', myCost: 0, commRate: 10 });
+        setJobForm({
+          shopId: shops[0]?.id || '',
+          itemId: '',
+          customerName: '',
+          phone: '',
+          description: '',
+          totalCharged: '',
+          myCost: 0,
+          commType: 'PERCENT',
+          commValue: 10,
+          payoutAmount: 0
+        });
+        setSelectedCategory('');
+        setSelectedSubCategory('');
         setActiveTab('dashboard');
       };
 
-      // Filtered transactions based on role
       const filteredTransactions = useMemo(() => {
         return transactions.filter(tx => {
           if (authRole === 'PARTNER' && tx.shopId !== loggedInShopId) return false;
           if (!searchQuery) return true;
           const q = searchQuery.toLowerCase();
-          return tx.customerName.toLowerCase().includes(q) || tx.description.toLowerCase().includes(q);
+          return tx.customerName.toLowerCase().includes(q) || tx.description.toLowerCase().includes(q) || tx.phone.includes(q);
         });
       }, [transactions, authRole, loggedInShopId, searchQuery]);
 
-      // Metrics
       const totalAdminOwed = useMemo(() => transactions.filter(t => !t.isSettled).reduce((sum, t) => sum + t.payoutToOther, 0), [transactions]);
       const totalAdminNetProfit = useMemo(() => transactions.reduce((sum, t) => sum + (t.totalCharged - t.myCost - t.payoutToOther), 0), [transactions]);
 
@@ -212,12 +402,19 @@
         return { pendingPayout, settledPayout, completedCount, totalCount: partnerTxs.length };
       }, [transactions, loggedInShopId]);
 
-      // --- LOGIN SCREENS IF NOT LOGGED IN ---
       if (authRole === 'GUEST_ADMIN' || authRole === 'GUEST_PARTNER') {
         return (
           <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">
-            <div className="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full">
-              <h1 className="text-xl font-extrabold text-slate-900 text-center mb-2">🏪 {t.appTitle}</h1>
+            <div className="bg-white p-8 rounded-2xl shadow-2xl max-w-md w-full relative">
+              <div className="absolute top-4 right-4">
+                <button onClick={() => setLang(lang === 'si' ? 'en' : 'si')} className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-2.5 py-1 rounded text-xs font-bold border">
+                  🌐 {lang === 'si' ? 'English' : 'සිංහල'}
+                </button>
+              </div>
+
+              <h1 className="text-xl font-extrabold text-slate-900 text-center mb-1">{t.appTitle}</h1>
+              <p className="text-gray-400 text-xs text-center mb-6">{t.appSubTitle}</p>
+
               <div className="flex justify-center gap-2 mb-6">
                 <button onClick={() => { setAuthRole('GUEST_ADMIN'); setLoginError(''); }} className={`px-4 py-1.5 rounded-lg text-xs font-bold ${authRole === 'GUEST_ADMIN' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'}`}>Admin Login</button>
                 <button onClick={() => { setAuthRole('GUEST_PARTNER'); setLoginError(''); }} className={`px-4 py-1.5 rounded-lg text-xs font-bold ${authRole === 'GUEST_PARTNER' ? 'bg-amber-600 text-white' : 'bg-gray-100 text-gray-600'}`}>Partner Login</button>
@@ -229,11 +426,11 @@
                 <form onSubmit={handleAdminLogin} className="space-y-4">
                   <h3 className="text-sm font-bold text-gray-700">{t.adminLoginTitle}</h3>
                   <div>
-                    <label className="block text-xs font-bold text-gray-600 mb-1">{t.username} (admin)</label>
+                    <label className="block text-xs font-bold text-gray-600 mb-1">{t.username}</label>
                     <input type="text" value={loginUser} onChange={(e) => setLoginUser(e.target.value)} className="w-full border rounded-lg p-2.5 text-sm" required />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-gray-600 mb-1">{t.password} (admin123)</label>
+                    <label className="block text-xs font-bold text-gray-600 mb-1">{t.password}</label>
                     <input type="password" value={loginPass} onChange={(e) => setLoginPass(e.target.value)} className="w-full border rounded-lg p-2.5 text-sm" required />
                   </div>
                   <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-xl text-sm shadow">{t.loginBtn}</button>
@@ -257,7 +454,6 @@
         );
       }
 
-      // --- MAIN APPLICATION INTERFACE (ADMIN OR PARTNER) ---
       const activePartnerObj = shops.find(s => s.id === loggedInShopId);
 
       return (
@@ -270,19 +466,28 @@
                   {authRole === 'ADMIN' ? '👑 Admin Master Control' : `🤝 Partner Shop Portal: ${activePartnerObj?.name}`}
                 </p>
               </div>
-              <button onClick={() => { setAuthRole('GUEST_ADMIN'); }} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold">
-                🚪 {t.logoutBtn}
-              </button>
+              <div className="flex items-center gap-3">
+                <button onClick={() => setLang(lang === 'si' ? 'en' : 'si')} className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded text-xs font-semibold border border-slate-700">
+                  🌐 {lang === 'si' ? 'English' : 'සිංහල'}
+                </button>
+                <button onClick={() => setAuthRole('GUEST_ADMIN')} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold">
+                  🚪 {t.logoutBtn}
+                </button>
+              </div>
             </div>
           </header>
 
           <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
-            <div className="max-w-7xl mx-auto px-4 flex gap-2 py-2">
-              <button onClick={() => setActiveTab('dashboard')} className={`px-4 py-2 rounded-lg font-medium text-sm ${activeTab === 'dashboard' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>📊 {t.dashboardTab}</button>
-              <button onClick={() => setActiveTab('addJob')} className={`px-4 py-2 rounded-lg font-medium text-sm ${activeTab === 'addJob' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>➕ {t.addJobTab}</button>
+            <div className="max-w-7xl mx-auto px-4 flex gap-2 py-2 overflow-x-auto">
+              <button onClick={() => setActiveTab('dashboard')} className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap ${activeTab === 'dashboard' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>📊 {t.dashboardTab}</button>
+              <button onClick={() => setActiveTab('addJob')} className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap ${activeTab === 'addJob' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>➕ {t.addJobTab}</button>
+              <button onClick={() => setActiveTab('catalog')} className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap ${activeTab === 'catalog' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>🛠️ {t.catalogTab}</button>
+
               {authRole === 'ADMIN' && (
                 <>
-                  <button onClick={() => setActiveTab('shops')} className={`px-4 py-2 rounded-lg font-medium text-sm ${activeTab === 'shops' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>🏬 {t.shopsTab}</button>
+                  <button onClick={() => setActiveTab('categories')} className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap ${activeTab === 'categories' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>📁 {t.categoriesTab}</button>
+                  <button onClick={() => setActiveTab('subCategories')} className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap ${activeTab === 'subCategories' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>📂 {t.subCategoriesTab}</button>
+                  <button onClick={() => setActiveTab('shops')} className={`px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap ${activeTab === 'shops' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>🏬 {t.shopsTab}</button>
                 </>
               )}
             </div>
@@ -290,10 +495,10 @@
 
           <main className="max-w-7xl mx-auto px-4 py-6">
             <div className="mb-6 bg-white p-4 rounded-xl border shadow-sm">
-              <input type="text" placeholder="Search customer or job..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full md:w-96 border rounded-lg px-3 py-2 text-sm" />
+              <input type="text" placeholder={t.searchPlaceholder} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="w-full md:w-96 border rounded-lg px-3 py-2 text-sm" />
             </div>
 
-            {/* DASHBOARD */}
+            {/* DASHBOARD TAB */}
             {activeTab === 'dashboard' && (
               <div>
                 {authRole === 'ADMIN' ? (
@@ -370,7 +575,7 @@
               </div>
             )}
 
-            {/* ADD JOB */}
+            {/* ADD JOB TAB */}
             {activeTab === 'addJob' && (
               <div className="max-w-xl mx-auto bg-white p-6 rounded-xl shadow-sm border">
                 <h2 className="text-xl font-bold mb-4 text-gray-800 border-b pb-2">➕ {t.addJobTab}</h2>
@@ -383,6 +588,48 @@
                       </select>
                     </div>
                   )}
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Filter by Category</label>
+                    <select value={selectedCategory} onChange={(e) => { setSelectedCategory(e.target.value); setSelectedSubCategory(''); }} className="w-full border rounded-lg p-2 text-sm">
+                      <option value="">-- All Categories --</option>
+                      {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Filter by Sub-Category</label>
+                    <select value={selectedSubCategory} onChange={(e) => setSelectedSubCategory(e.target.value)} className="w-full border rounded-lg p-2 text-sm">
+                      <option value="">-- All Sub-Categories --</option>
+                      {subCategories.filter(sub => !selectedCategory || sub.categoryId === selectedCategory).map(sub => (
+                        <option key={sub.id} value={sub.id}>{sub.name}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">Select Service / Item from Catalog (Auto Commission)</label>
+                    <select value={jobForm.itemId || ''} onChange={(e) => handleCatalogSelect(e.target.value)} className="w-full border rounded-lg p-2 text-sm">
+                      <option value="">-- Custom Job / Select Item --</option>
+                      {catalogItems
+                        .filter(i => {
+                          const targetShop = authRole === 'ADMIN' ? (jobForm.shopId || shops[0]?.id) : loggedInShopId;
+                          if (i.shopId !== targetShop) return false;
+                          if (selectedCategory && i.categoryId !== selectedCategory) return false;
+                          if (selectedSubCategory && i.subCategoryId !== selectedSubCategory) return false;
+                          return true;
+                        })
+                        .map(item => {
+                          const subCat = subCategories.find(sub => sub.id === item.subCategoryId);
+                          return (
+                            <option key={item.id} value={item.id}>
+                              {item.name} {subCat ? `[${subCat.name}]` : ''} - Price: Rs.{item.basePrice} (Comm: Rs.{item.payoutAmount})
+                            </option>
+                          );
+                        })}
+                    </select>
+                  </div>
+
                   <div>
                     <label className="block text-xs font-bold text-gray-700 mb-1">{t.customerName}</label>
                     <input type="text" required value={jobForm.customerName} onChange={(e) => setJobForm({...jobForm, customerName: e.target.value})} className="w-full border rounded-lg p-2 text-sm" />
@@ -399,17 +646,191 @@
                     <label className="block text-xs font-bold text-gray-700 mb-1">{t.totalCharged}</label>
                     <input type="number" required value={jobForm.totalCharged} onChange={(e) => setJobForm({...jobForm, totalCharged: e.target.value})} className="w-full border rounded-lg p-2 text-sm font-bold" />
                   </div>
+
+                  {/* Commission Configuration inside Add Job (for custom jobs or manual override) */}
+                  <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
+                    <label className="block text-xs font-bold text-amber-900 mb-2">Commission Payout Configuration</label>
+                    <div className="flex gap-4 mb-2">
+                      <label className="flex items-center gap-1 text-xs"><input type="radio" name="jobCommType" value="PERCENT" checked={jobForm.commType === 'PERCENT'} onChange={() => setJobForm({...jobForm, commType: 'PERCENT'})} /> Percentage (%)</label>
+                      <label className="flex items-center gap-1 text-xs"><input type="radio" name="jobCommType" value="FIXED" checked={jobForm.commType === 'FIXED'} onChange={() => setJobForm({...jobForm, commType: 'FIXED'})} /> Fixed (Rs.)</label>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <input type="number" value={jobForm.commValue} onChange={(e) => setJobForm({...jobForm, commValue: e.target.value})} className="border rounded p-1 text-sm bg-white" />
+                      <div>
+                        <div className="text-[10px] text-gray-500">Payout Amount</div>
+                        <div className="font-extrabold text-amber-700 text-sm">Rs. {jobForm.payoutAmount.toLocaleString()}</div>
+                      </div>
+                    </div>
+                  </div>
+
                   <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg text-sm shadow">💾 {t.saveJobBtn}</button>
                 </form>
               </div>
             )}
 
-            {/* SHOPS MANAGEMENT (ADMIN ONLY WITH AUTO-CREDENTIALS) */}
+            {/* CATALOG & SERVICES TAB */}
+            {activeTab === 'catalog' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white p-6 rounded-xl shadow-sm border">
+                  <h3 className="font-bold mb-4 text-gray-800">🛠️ {t.addCatalogTitle}</h3>
+                  <form onSubmit={handleAddCatalogItem} className="space-y-4">
+                    {authRole === 'ADMIN' && (
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 mb-1">{t.selectShopForCatalog}</label>
+                        <select value={newCatalog.shopId} onChange={(e) => setNewCatalog({...newCatalog, shopId: e.target.value})} className="w-full border rounded-lg p-2 text-sm">
+                          {shops.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                        </select>
+                      </div>
+                    )}
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.selectCategory}</label>
+                      <select value={newCatalog.categoryId} onChange={(e) => setNewCatalog({...newCatalog, categoryId: e.target.value})} className="w-full border rounded-lg p-2 text-sm">
+                        {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.selectSubCategory}</label>
+                      <select value={newCatalog.subCategoryId} onChange={(e) => setNewCatalog({...newCatalog, subCategoryId: e.target.value})} className="w-full border rounded-lg p-2 text-sm">
+                        <option value="">-- None --</option>
+                        {subCategories.filter(sub => sub.categoryId === newCatalog.categoryId).map(sub => (
+                          <option key={sub.id} value={sub.id}>{sub.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.itemName}</label>
+                      <input type="text" required value={newCatalog.name} onChange={(e) => setNewCatalog({...newCatalog, name: e.target.value})} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.basePrice}</label>
+                      <input type="number" required value={newCatalog.basePrice} onChange={(e) => setNewCatalog({...newCatalog, basePrice: e.target.value})} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                    <div className="bg-amber-50 p-3 rounded-lg border border-amber-200">
+                      <label className="block text-xs font-bold text-amber-900 mb-2">Commission Payout Configuration</label>
+                      <div className="flex gap-4 mb-2">
+                        <label className="flex items-center gap-1 text-xs"><input type="radio" name="commType" value="PERCENT" checked={newCatalog.commType === 'PERCENT'} onChange={() => setNewCatalog({...newCatalog, commType: 'PERCENT'})} /> Percentage (%)</label>
+                        <label className="flex items-center gap-1 text-xs"><input type="radio" name="commType" value="FIXED" checked={newCatalog.commType === 'FIXED'} onChange={() => setNewCatalog({...newCatalog, commType: 'FIXED'})} /> Fixed (Rs.)</label>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2">
+                        <input type="number" value={newCatalog.commValue} onChange={(e) => setNewCatalog({...newCatalog, commValue: e.target.value})} className="border rounded p-1 text-sm bg-white" />
+                        <div>
+                          <div className="text-[10px] text-gray-500">Payout Amount</div>
+                          <div className="font-extrabold text-amber-700 text-sm">Rs. {newCatalog.payoutAmount.toLocaleString()}</div>
+                        </div>
+                      </div>
+                    </div>
+                    <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 rounded-lg text-sm">{t.catalogSaveBtn}</button>
+                  </form>
+                </div>
+                <div className="bg-white p-6 rounded-xl shadow-sm border">
+                  <h3 className="font-bold mb-4 text-gray-800">🛍️ {t.shopServicesTitle}</h3>
+                  <div className="space-y-3">
+                    {catalogItems
+                      .filter(item => authRole === 'ADMIN' || item.shopId === loggedInShopId)
+                      .map(item => {
+                        const shop = shops.find(s => s.id === item.shopId);
+                        const cat = categories.find(c => c.id === item.categoryId);
+                        const sub = subCategories.find(s => s.id === item.subCategoryId);
+                        return (
+                          <div key={item.id} className="p-3 border rounded-lg bg-slate-50 flex justify-between items-center text-xs">
+                            <div>
+                              {authRole === 'ADMIN' && <span className="bg-gray-200 px-1 py-0.5 rounded font-bold mr-1">{shop?.name}</span>}
+                              {cat && <span className="bg-indigo-100 text-indigo-700 px-1 py-0.5 rounded mr-1">{cat.name}</span>}
+                              {sub && <span className="bg-blue-100 text-blue-700 px-1 py-0.5 rounded mr-1">{sub.name}</span>}
+                              <div className="font-bold text-slate-800 text-sm mt-1">{item.name}</div>
+                            </div>
+                            <div className="text-right">
+                              <div className="font-bold text-emerald-600">Rs. {item.basePrice.toLocaleString()}</div>
+                              <div className="text-amber-600 font-bold">Comm Payout: Rs. {item.payoutAmount.toLocaleString()}</div>
+                              <button onClick={() => setCatalogItems(catalogItems.filter(i => i.id !== item.id))} className="text-red-500 font-bold mt-1">🗑️</button>
+                            </div>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* CATEGORIES TAB (ADMIN) */}
+            {activeTab === 'categories' && authRole === 'ADMIN' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white p-6 rounded-xl shadow-sm border">
+                  <h3 className="font-bold mb-4 text-gray-800">➕ {t.addCatTitle}</h3>
+                  <form onSubmit={handleAddCategory} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.catNameLabel}</label>
+                      <input type="text" required value={newCat.name} onChange={(e) => setNewCat({...newCat, name: e.target.value})} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.catDescLabel}</label>
+                      <input type="text" value={newCat.description} onChange={(e) => setNewCat({...newCat, description: e.target.value})} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                    <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm">{t.catSaveBtn}</button>
+                  </form>
+                </div>
+                <div className="bg-white p-6 rounded-xl shadow-sm border">
+                  <h3 className="font-bold mb-4 text-gray-800">📁 Categories List</h3>
+                  <div className="space-y-2">
+                    {categories.map(c => (
+                      <div key={c.id} className="p-3 border rounded-lg bg-gray-50 flex justify-between items-center text-xs">
+                        <div>
+                          <div className="font-bold text-indigo-700 text-sm">{c.name}</div>
+                          <div className="text-gray-500">{c.description}</div>
+                        </div>
+                        <button onClick={() => setCategories(categories.filter(x => x.id !== c.id))} className="text-red-500 font-bold">🗑️</button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SUB-CATEGORIES TAB (ADMIN) */}
+            {activeTab === 'subCategories' && authRole === 'ADMIN' && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white p-6 rounded-xl shadow-sm border">
+                  <h3 className="font-bold mb-4 text-gray-800">➕ {t.addSubCatTitle}</h3>
+                  <form onSubmit={handleAddSubCategory} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.selectCategory}</label>
+                      <select value={newSubCat.categoryId} onChange={(e) => setNewSubCat({...newSubCat, categoryId: e.target.value})} className="w-full border rounded-lg p-2 text-sm">
+                        {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.subCatNameLabel}</label>
+                      <input type="text" required value={newSubCat.name} onChange={(e) => setNewSubCat({...newSubCat, name: e.target.value})} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                    <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm">{t.subCatSaveBtn}</button>
+                  </form>
+                </div>
+                <div className="bg-white p-6 rounded-xl shadow-sm border">
+                  <h3 className="font-bold mb-4 text-gray-800">📂 Sub-Categories List</h3>
+                  <div className="space-y-2">
+                    {subCategories.map(sub => {
+                      const parentCat = categories.find(c => c.id === sub.categoryId);
+                      return (
+                        <div key={sub.id} className="p-3 border rounded-lg bg-gray-50 flex justify-between items-center text-xs">
+                          <div>
+                            <span className="bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded font-bold mr-1">{parentCat?.name}</span>
+                            <div className="font-bold text-slate-800 text-sm mt-1">{sub.name}</div>
+                          </div>
+                          <button onClick={() => setSubCategories(subCategories.filter(x => x.id !== sub.id))} className="text-red-500 font-bold">🗑️</button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SHOPS TAB (ADMIN) */}
             {activeTab === 'shops' && authRole === 'ADMIN' && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-white p-6 rounded-xl shadow-sm border">
                   <h3 className="font-bold mb-4 text-gray-800">🏬 {t.addNewsShop}</h3>
-                  <form onSubmit={handleAddShopWithCreds} className="space-y-4">
+                  <form onSubmit={handleAddShop} className="space-y-4">
                     <div>
                       <label className="block text-xs font-bold text-gray-700 mb-1">{t.shopName}</label>
                       <input type="text" required value={newShop.name} onChange={(e) => setNewShop({...newShop, name: e.target.value})} className="w-full border rounded-lg p-2 text-sm" />
@@ -426,16 +847,8 @@
                       <label className="block text-xs font-bold text-gray-700 mb-1">{t.defaultCommRate}</label>
                       <input type="number" value={newShop.defaultCommRate} onChange={(e) => setNewShop({...newShop, defaultCommRate: e.target.value})} className="w-full border rounded-lg p-2 text-sm" />
                     </div>
-                    <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm">💾 {t.saveShopBtn}</button>
+                    <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm">{t.saveShopBtn}</button>
                   </form>
-
-                  {lastCreatedCreds && (
-                    <div className="mt-4 p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs space-y-1">
-                      <div className="font-bold text-amber-900">{t.generatedCredentials}</div>
-                      <div>Username: <strong>{lastCreatedCreds.username}</strong></div>
-                      <div>Password: <strong>{lastCreatedCreds.password}</strong></div>
-                    </div>
-                  )}
                 </div>
 
                 <div className="bg-white p-6 rounded-xl shadow-sm border">
@@ -445,7 +858,8 @@
                       <div key={s.id} className="p-3 border rounded-lg bg-slate-50 flex justify-between items-center text-xs">
                         <div>
                           <div className="font-bold text-slate-800 text-sm">{s.name}</div>
-                          <div className="text-gray-500">User: <code className="bg-gray-200 px-1 rounded">{s.username}</code> | Pass: <code className="bg-gray-200 px-1 rounded">{s.password}</code></div>
+                          <div className="text-gray-500">Contact: {s.contactPerson} ({s.phone})</div>
+                          <div className="text-gray-500 mt-1">User: <code className="bg-gray-200 px-1 rounded">{s.username}</code> | Pass: <code className="bg-gray-200 px-1 rounded">{s.password}</code></div>
                         </div>
                         <div className="text-amber-700 font-bold">Comm: {s.defaultCommRate}%</div>
                       </div>
