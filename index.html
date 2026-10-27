@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cross-Shop Referral & Commission Management System</title>
+  
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-800">
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, useMemo } = React;
+
+    const translations = {
+      si: {
+        appTitle: "සාප්පු හවුල්කාර හා සේවා කළමනාකරණය",
+        appSubTitle: "Multi-Shop Referral, Catalog & Commission Portal",
+        adminRole: "ප්‍රධාන සාප්පුව (Admin Master View)",
+        partnerRole: "හවුල්කාර සාප්පු ප්‍රවේශය (Partner Portal)",
+        loggedInAs: "දැනට සක්‍රීය ප්‍රොෆයිලය:",
+        shareLinkTitle: "මෙම හවුල්කාර සාප්පුවට පිවිසෙන සෘජු ලින්ක් එක (Partner Direct Link):",
+        copyLinkBtn: "ලින්ක් එක කොපි කරන්න",
+        linkCopiedMsg: "ලින්ක් එක කොපි විය!",
+        dashboardTab: "ඩෑෂ්බෝඩ් (Dashboard)",
+        addJobTab: "නව ජොබ් එකක් එක් කරන්න",
+        categoriesTab: "වර්ගීකරණය (Categories)",
+        catalogTab: "සේවා සහ භාණ්ඩ (Services & Goods)",
+        shopsTab: "හවුල්කාර සාප්පු",
+        settlementsTab: "ගෙවීම් නිරවුල් කිරීම්",
+        historyTab: "ගනුදෙනු වාර්තා (Job History)",
+        adminOwedTotal: "හවුල්කරුවන්ට ගෙවීමට ඇති මුළු කොමිස්",
+        adminNetProfit: "මගේ ශුද්ධ ලාභය (Admin Net Profit)",
+        totalJobsRecorded: "ලියාපදිංචි මුළු ජොබ් ගණන",
+        partnerEarnedTotal: "ඔබට ලැබීමට ඇති මුළු කොමිස් මුදල",
+        partnerEarnedDesc: "ප්‍රධාන සාප්පුවෙන් ඔබට ලැබීමට ඇති නිරවුල් නොකළ කොමිස් මුදල",
+        partnerCompletedJobs: "සාර්ථකව නිම කළ ජොබ්",
+        partnerSettlementTotal: "දැනට ලබාගත් මුළු කොමිස් මුදල",
+        addCatTitle: "නව වර්ගීකරණයක් එකතු කරන්න",
+        catNameLabel: "වර්ගීකරණයේ නම",
+        catDescLabel: "විස්තරය",
+        catSaveBtn: "වර්ගීකරණය සුරකින්න",
+        existingCats: "දැනට ඇති වර්ගීකරණයන්",
+        addCatalogTitle: "ඔබේ සාප්පුවට අදාළ නව සේවාවක් / භාණ්ඩයක් එකතු කරන්න",
+        selectShopForCatalog: "අදාළ හවුල්කාර සාප්පුව",
+        selectCategory: "වර්ගීකරණය",
+        itemName: "සේවාවේ / භාණ්ඩයේ නම",
+        basePrice: "සාමාන්‍ය මිළ (Rs.)",
+        defaultCommRate: "කොමිස් % (Commission %)",
+        catalogSaveBtn: "සේවාව / භාණ්ඩය සුරකින්න",
+        shopServicesTitle: "හවුල්කාර සාප්පුවල සේවා සහ භාණ්ඩ ලැයිස්තුව",
+        selectPartnerShop: "හවුල්කාර සාප්පුව තෝරන්න",
+        jobDirection: "ගනුදෙනු වර්ගය",
+        dirInbound: "මෙම හවුල්කාර සාප්පුව මට පාරිභෝගිකයෙකු එවුවා (Inbound Referral)",
+        selectItemFromCatalog: "සාප්පුවේ සේවාව / භාණ්ඩය තෝරන්න",
+        customJobOption: "-- වෙනත් විශේෂ සේවාවක් / වෙනත් ඡොබ් එකක් --",
+        customerName: "පාරිභෝගිකයාගේ නම",
+        phone: "දුරකථන අංකය",
+        jobDesc: "කාර්යයේ විස්තරය",
+        totalCharged: "පාරිභෝගිකයාගෙන් අය කළ මුදල (Rs.)",
+        myCost: "මගේ වියදම (Rs.)",
+        commCalculation: "කොමිස් ගණනය කිරීම",
+        fixedRs: "ස්ථිර මුදලක් (Rs.)",
+        percentRate: "ප්‍රතිශතයක් (% Rate)",
+        payoutAmount: "හවුල්කරුට හිමි කොමිස් මුදල",
+        jobStatus: "කාර්යයේ තත්ත්වය",
+        date: "දිනය",
+        notes: "සටහන්",
+        saveJobBtn: "ගනුදෙනුව සුරකින්න",
+        statusPending: "ක්‍රියාත්මක වෙමින්",
+        statusCompleted: "අවසන් කළා",
+        settledPaid: "කොමිස් මුදල ගෙවා අවසන්",
+        settledUnpaid: "ගෙවීමට ඇත",
+        addNewsShop: "නව හවුල්කාර සාප්පුවක් ලියාපදිංචි කරන්න",
+        shopName: "සාප්පුවේ නම",
+        contactPerson: "સම්බන්ධීකාරක නම",
+        saveShopBtn: "සාප්පු ප්‍රොෆයිලය සුරකින්න",
+        recordSettlementPayout: "හවුල්කරුට කොමිස් මුදල් ගෙවීම (Settlement)",
+        payoutAmountInput: "ගෙවන මුදල (Rs.)",
+        settleBtn: "ගෙවීම් තහවුරු කරන්න",
+        searchPlaceholder: "පාරිභෝගිකයා, සේවාව හෝ දුරකථන අංකයෙන් සොයන්න...",
+        confirmDeleteTx: "ඔබට මෙම ගනුදෙනු වාර්තාව ඉවත් කිරීමට අවශ්‍යද?",
+        confirmDeleteShop: "මෙම සාප්පු ප්‍රොෆයිලය ඉවත් කිරීමට ඔබ විශ්වාසද?",
+        actions: "ක්‍රියාමාර්ග",
+        custBill: "ಪාරිභෝගික ගාස්තුව:",
+        baseCostLabel: "මගේ වියදම:",
+        partnerCommLabel: "හවුල්කරුගේ කොමිස් මුදල:",
+        myProfitLabel: "මගේ ශුද්ධ ලාභය:"
+      }
+    };
+
+    const initialCategories = [
+      { id: 'cat_1', name: 'Mobile Repair', description: 'Display replacement, IC repair' },
+      { id: 'cat_2', name: 'Computer & Laptop', description: 'Motherboard repair, format' },
+      { id: 'cat_3', name: 'Graphic & Printing', description: 'Banner printing, design' }
+    ];
+
+    const initialShops = [
+      { id: 'shop_1', name: 'Apex Electronics (Kamal)', contactPerson: 'Kamal Perera', phone: '0771112233', defaultCommRate: 10 },
+      { id: 'shop_2', name: 'Micro Tech Solutions (Sunil)', contactPerson: 'Sunil Shantha', phone: '0714445566', defaultCommRate: 15 }
+    ];
+
+    const initialCatalog = [
+      { id: 'item_1', shopId: 'shop_1', categoryId: 'cat_1', name: 'Samsung Display Replacement', basePrice: 15000, defaultCommRate: 12 },
+      { id: 'item_2', shopId: 'shop_2', categoryId: 'cat_3', name: 'Vinyl Banner Printing', basePrice: 3500, defaultCommRate: 15 }
+    ];
+
+    const initialTransactions = [
+      { id: 'tx_1', shopId: 'shop_1', categoryId: 'cat_1', itemId: 'item_1', type: 'INBOUND', customerName: 'Nimal Jayasinghe', phone: '0779876543', description: 'Samsung Display Replacement', totalCharged: 15000, myCost: 8000, payoutToOther: 1800, jobStatus: 'COMPLETED', isSettled: false, date: '2026-10-25', notes: 'Apex referred' },
+      { id: 'tx_2', shopId: 'shop_2', categoryId: 'cat_3', itemId: 'item_2', type: 'INBOUND', customerName: 'Saman Kumara', phone: '0751239876', description: 'Vinyl Banner Printing', totalCharged: 14000, myCost: 5000, payoutToOther: 2100, jobStatus: 'COMPLETED', isSettled: true, date: '2026-10-26', notes: 'Micro Tech referred' }
+    ];
+
+    function App() {
+      const [lang, setLang] = useState('si');
+      const t = translations[lang];
+
+      const [categories, setCategories] = useState(() => JSON.parse(localStorage.getItem('app_categories')) || initialCategories);
+      const [shops, setShops] = useState(() => JSON.parse(localStorage.getItem('app_shops')) || initialShops);
+      const [catalogItems, setCatalogItems] = useState(() => JSON.parse(localStorage.getItem('app_catalog_items')) || initialCatalog);
+      const [transactions, setTransactions] = useState(() => JSON.parse(localStorage.getItem('app_transactions')) || initialTransactions);
+      const [settlements, setSettlements] = useState(() => JSON.parse(localStorage.getItem('app_settlements')) || []);
+
+      const [currentRole, setActiveRole] = useState('ADMIN'); // 'ADMIN' or 'PARTNER'
+      const [activePartnerId, setActivePartnerId] = useState(shops[0]?.id || '');
+      const [activeTab, setActiveTab] = useState('dashboard');
+      const [searchQuery, setSearchQuery] = useState('');
+      const [copiedLink, setCopiedLink] = useState(false);
+
+      useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const urlShopId = params.get('shopId');
+        if (urlShopId) {
+          const found = shops.find(s => s.id === urlShopId);
+          if (found) {
+            setActivePartnerId(urlShopId);
+            setActiveRole('PARTNER');
+          }
+        }
+      }, []);
+
+      useEffect(() => { localStorage.setItem('app_categories', JSON.stringify(categories)); }, [categories]);
+      useEffect(() => { localStorage.setItem('app_shops', JSON.stringify(shops)); }, [shops]);
+      useEffect(() => { localStorage.setItem('app_catalog_items', JSON.stringify(catalogItems)); }, [catalogItems]);
+      useEffect(() => { localStorage.setItem('app_transactions', JSON.stringify(transactions)); }, [transactions]);
+      useEffect(() => { localStorage.setItem('app_settlements', JSON.stringify(settlements)); }, [settlements]);
+
+      const [newCat, setNewCat] = useState({ name: '', description: '' });
+      const [newShop, setNewShop] = useState({ name: '', contactPerson: '', phone: '', defaultCommRate: 10 });
+      const [newCatalog, setNewCatalog] = useState({ shopId: shops[0]?.id || '', categoryId: '', name: '', basePrice: '', defaultCommRate: 10 });
+      
+      const [jobForm, setJobForm] = useState({
+        shopId: shops[0]?.id || '',
+        categoryId: '',
+        itemId: '',
+        type: 'INBOUND',
+        customerName: '',
+        phone: '',
+        description: '',
+        totalCharged: '',
+        myCost: '',
+        commType: 'PERCENT',
+        commValue: 10,
+        payoutToOther: 0,
+        jobStatus: 'PENDING',
+        date: new Date().toISOString().split('T')[0],
+        notes: ''
+      });
+
+      const [settleAmount, setSettleAmount] = useState('');
+
+      const handleCatalogSelect = (itemId) => {
+        if (!itemId) return;
+        const selected = catalogItems.find(c => c.id === itemId);
+        if (selected) {
+          setJobForm(prev => {
+            const total = selected.basePrice;
+            const comm = Math.round((total * selected.defaultCommRate) / 100);
+            return {
+              ...prev,
+              itemId: selected.id,
+              categoryId: selected.categoryId,
+              description: selected.name,
+              totalCharged: total,
+              commType: 'PERCENT',
+              commValue: selected.defaultCommRate,
+              payoutToOther: comm
+            };
+          });
+        }
+      };
+
+      useEffect(() => {
+        const total = parseFloat(jobForm.totalCharged) || 0;
+        let calculated = 0;
+        if (jobForm.commType === 'PERCENT') {
+          calculated = Math.round((total * (parseFloat(jobForm.commValue) || 0)) / 100);
+        } else {
+          calculated = parseFloat(jobForm.commValue) || 0;
+        }
+        setJobForm(prev => ({ ...prev, payoutToOther: calculated }));
+      }, [jobForm.totalCharged, jobForm.commType, jobForm.commValue]);
+
+      const handleAddCategory = (e) => {
+        e.preventDefault();
+        if (!newCat.name.trim()) return;
+        setCategories([...categories, { id: 'cat_' + Date.now(), ...newCat }]);
+        setNewCat({ name: '', description: '' });
+      };
+
+      const handleAddShop = (e) => {
+        e.preventDefault();
+        if (!newShop.name.trim()) return;
+        setShops([...shops, { id: 'shop_' + Date.now(), ...newShop, defaultCommRate: parseFloat(newShop.defaultCommRate) || 10 }]);
+        setNewShop({ name: '', contactPerson: '', phone: '', defaultCommRate: 10 });
+      };
+
+      const handleAddCatalogItem = (e) => {
+        e.preventDefault();
+        if (!newCatalog.name.trim() || !newCatalog.shopId) return;
+        setCatalogItems([...catalogItems, {
+          id: 'item_' + Date.now(),
+          ...newCatalog,
+          basePrice: parseFloat(newCatalog.basePrice) || 0,
+          defaultCommRate: parseFloat(newCatalog.defaultCommRate) || 10
+        }]);
+        setNewCatalog(prev => ({ ...prev, name: '', basePrice: '' }));
+      };
+
+      const handleAddJob = (e) => {
+        e.preventDefault();
+        if (!jobForm.shopId || !jobForm.customerName.trim()) return;
+        const newTx = {
+          id: 'tx_' + Date.now(),
+          ...jobForm,
+          totalCharged: parseFloat(jobForm.totalCharged) || 0,
+          myCost: parseFloat(jobForm.myCost) || 0,
+          payoutToOther: parseFloat(jobForm.payoutToOther) || 0,
+          isSettled: false
+        };
+        setTransactions([newTx, ...transactions]);
+        setJobForm({
+          shopId: shops[0]?.id || '',
+          categoryId: '',
+          itemId: '',
+          type: 'INBOUND',
+          customerName: '',
+          phone: '',
+          description: '',
+          totalCharged: '',
+          myCost: '',
+          commType: 'PERCENT',
+          commValue: 10,
+          payoutToOther: 0,
+          jobStatus: 'PENDING',
+          date: new Date().toISOString().split('T')[0],
+          notes: ''
+        });
+        setActiveTab('dashboard');
+      };
+
+      const handleSettlePayout = (shopId) => {
+        const amount = parseFloat(settleAmount);
+        if (!amount || amount <= 0) return;
+
+        const settlementRecord = {
+          id: 'set_' + Date.now(),
+          shopId,
+          amount,
+          date: new Date().toISOString().split('T')[0],
+          notes: 'Cash/Bank Transfer'
+        };
+
+        let remaining = amount;
+        const updatedTxs = transactions.map(tx => {
+          if (tx.shopId === shopId && !tx.isSettled) {
+            if (tx.payoutToOther <= remaining) {
+              remaining -= tx.payoutToOther;
+              return { ...tx, isSettled: true };
+            }
+          }
+          return tx;
+        });
+
+        setSettlements([settlementRecord, ...settlements]);
+        setTransactions(updatedTxs);
+        setSettleAmount('');
+      };
+
+      // STRICT PRIVACY FILTER: Partner can ONLY see their own shop's referrals/data!
+      const filteredTransactions = useMemo(() => {
+        return transactions.filter(tx => {
+          if (currentRole === 'PARTNER' && tx.shopId !== activePartnerId) return false;
+          if (!searchQuery) return true;
+          const q = searchQuery.toLowerCase();
+          return (
+            tx.customerName.toLowerCase().includes(q) ||
+            tx.description.toLowerCase().includes(q) ||
+            tx.phone.includes(q)
+          );
+        });
+      }, [transactions, currentRole, activePartnerId, searchQuery]);
+
+      const totalAdminOwed = useMemo(() => transactions.filter(t => !t.isSettled).reduce((sum, t) => sum + t.payoutToOther, 0), [transactions]);
+      const totalAdminNetProfit = useMemo(() => transactions.reduce((sum, t) => sum + (t.totalCharged - t.myCost - t.payoutToOther), 0), [transactions]);
+
+      const activePartnerObj = useMemo(() => shops.find(s => s.id === activePartnerId), [shops, activePartnerId]);
+
+      const partnerMetrics = useMemo(() => {
+        const partnerTxs = transactions.filter(t => t.shopId === activePartnerId);
+        const pendingPayout = partnerTxs.filter(t => !t.isSettled).reduce((sum, t) => sum + t.payoutToOther, 0);
+        const settledPayout = partnerTxs.filter(t => t.isSettled).reduce((sum, t) => sum + t.payoutToOther, 0);
+        const completedCount = partnerTxs.filter(t => t.jobStatus === 'COMPLETED').length;
+        return { pendingPayout, settledPayout, completedCount, totalCount: partnerTxs.length };
+      }, [transactions, activePartnerId]);
+
+      const shareablePartnerUrl = `${window.location.origin}${window.location.pathname}?shopId=${activePartnerId}`;
+
+      const copyToClipboard = () => {
+        navigator.clipboard.writeText(shareablePartnerUrl);
+        setCopiedLink(true);
+        setTimeout(() => setCopiedLink(false), 3000);
+      };
+
+      return (
+        <div className="min-h-screen pb-12">
+          <header className="bg-slate-900 text-white shadow-md">
+            <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+              <div>
+                <h1 className="text-2xl font-bold flex items-center gap-2">🏪 {t.appTitle}</h1>
+                <p className="text-slate-400 text-xs mt-1">{t.appSubTitle}</p>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  onClick={() => setLang(lang === 'si' ? 'en' : 'si')}
+                  className="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded text-xs font-semibold border border-slate-700"
+                >
+                  🌐 {lang === 'si' ? 'English' : 'සිංහල'}
+                </button>
+
+                <div className="bg-slate-800 p-1.5 rounded-lg border border-slate-700 flex items-center gap-2">
+                  <span className="text-xs text-slate-400 px-2">{t.loggedInAs}</span>
+                  <select
+                    value={currentRole}
+                    onChange={(e) => setActiveRole(e.target.value)}
+                    className="bg-slate-900 text-xs font-bold text-emerald-400 px-2 py-1 rounded border border-slate-700 outline-none"
+                  >
+                    <option value="ADMIN">👨‍💼 {t.adminRole}</option>
+                    <option value="PARTNER">🤝 {t.partnerRole}</option>
+                  </select>
+
+                  {currentRole === 'PARTNER' && (
+                    <select
+                      value={activePartnerId}
+                      onChange={(e) => setActivePartnerId(e.target.value)}
+                      className="bg-slate-900 text-xs text-amber-300 px-2 py-1 rounded border border-slate-700 outline-none"
+                    >
+                      {shops.map(s => (
+                        <option key={s.id} value={s.id}>{s.name}</option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {currentRole === 'PARTNER' && activePartnerObj && (
+              <div className="bg-slate-800 border-t border-slate-700 py-2 px-4">
+                <div className="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2 text-xs">
+                  <span className="text-amber-300 font-medium">
+                    📌 {t.shareLinkTitle} <code className="bg-slate-900 px-2 py-0.5 rounded text-white">{shareablePartnerUrl}</code>
+                  </span>
+                  <button onClick={copyToClipboard} className="bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-3 py-1 rounded">
+                    {copiedLink ? t.linkCopiedMsg : t.copyLinkBtn}
+                  </button>
+                </div>
+              </div>
+            )}
+          </header>
+
+          <div className="bg-white border-b border-gray-200 sticky top-0 z-10 shadow-sm">
+            <div className="max-w-7xl mx-auto px-4 flex overflow-x-auto gap-2 py-2">
+              <button
+                onClick={() => setActiveTab('dashboard')}
+                className={`px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap ${activeTab === 'dashboard' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
+              >
+                📊 {t.dashboardTab}
+              </button>
+
+              {currentRole === 'ADMIN' && (
+                <>
+                  <button onClick={() => setActiveTab('addJob')} className={`px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap ${activeTab === 'addJob' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
+                    ➕ {t.addJobTab}
+                  </button>
+                  <button onClick={() => setActiveTab('categories')} className={`px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap ${activeTab === 'categories' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
+                    📁 {t.categoriesTab}
+                  </button>
+                  <button onClick={() => setActiveTab('catalog')} className={`px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap ${activeTab === 'catalog' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
+                    🛠️ {t.catalogTab}
+                  </button>
+                  <button onClick={() => setActiveTab('shops')} className={`px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap ${activeTab === 'shops' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
+                    🏬 {t.shopsTab}
+                  </button>
+                  <button onClick={() => setActiveTab('settlements')} className={`px-4 py-2 rounded-lg font-medium text-sm flex items-center gap-2 whitespace-nowrap ${activeTab === 'settlements' ? 'bg-indigo-600 text-white' : 'text-gray-600 hover:bg-gray-100'}`}>
+                    💳 {t.settlementsTab}
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
+
+          <main className="max-w-7xl mx-auto px-4 py-6">
+            <div className="mb-6 flex flex-col md:flex-row gap-4 justify-between items-center bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+              <div className="w-full md:w-96">
+                <input
+                  type="text"
+                  placeholder={t.searchPlaceholder}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+              </div>
+              <div className="text-xs text-gray-500 font-medium">
+                {currentRole === 'ADMIN' ? (
+                  <span className="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full border border-indigo-200">👑 Admin Master View</span>
+                ) : (
+                  <span className="bg-amber-50 text-amber-800 px-3 py-1.5 rounded-full border border-amber-200">🤝 Partner View: <strong>{activePartnerObj?.name}</strong></span>
+                )}
+              </div>
+            </div>
+
+            {/* DASHBOARD TAB */}
+            {activeTab === 'dashboard' && (
+              <div>
+                {currentRole === 'ADMIN' ? (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div className="bg-white p-6 rounded-xl border-l-4 border-amber-500 shadow-sm">
+                      <p className="text-xs font-semibold text-gray-500 uppercase">{t.adminOwedTotal}</p>
+                      <h3 className="text-3xl font-extrabold text-amber-600 mt-2">Rs. {totalAdminOwed.toLocaleString()}</h3>
+                    </div>
+                    <div className="bg-white p-6 rounded-xl border-l-4 border-emerald-500 shadow-sm">
+                      <p className="text-xs font-semibold text-gray-500 uppercase">{t.adminNetProfit}</p>
+                      <h3 className="text-3xl font-extrabold text-emerald-600 mt-2">Rs. {totalAdminNetProfit.toLocaleString()}</h3>
+                    </div>
+                    <div className="bg-white p-6 rounded-xl border-l-4 border-indigo-500 shadow-sm">
+                      <p className="text-xs font-semibold text-gray-500 uppercase">{t.totalJobsRecorded}</p>
+                      <h3 className="text-3xl font-extrabold text-indigo-600 mt-2">{transactions.length}</h3>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div className="bg-white p-6 rounded-xl border-l-4 border-amber-500 shadow-sm">
+                      <p className="text-xs font-semibold text-gray-500 uppercase">{t.partnerEarnedTotal}</p>
+                      <h3 className="text-3xl font-extrabold text-amber-600 mt-2">Rs. {partnerMetrics.pendingPayout.toLocaleString()}</h3>
+                      <p className="text-xs text-gray-400 mt-1">{t.partnerEarnedDesc}</p>
+                    </div>
+                    <div className="bg-white p-6 rounded-xl border-l-4 border-emerald-500 shadow-sm">
+                      <p className="text-xs font-semibold text-gray-500 uppercase">{t.partnerSettlementTotal}</p>
+                      <h3 className="text-3xl font-extrabold text-emerald-600 mt-2">Rs. {partnerMetrics.settledPayout.toLocaleString()}</h3>
+                    </div>
+                    <div className="bg-white p-6 rounded-xl border-l-4 border-blue-500 shadow-sm">
+                      <p className="text-xs font-semibold text-gray-500 uppercase">{t.partnerCompletedJobs}</p>
+                      <h3 className="text-3xl font-extrabold text-blue-600 mt-2">{partnerMetrics.completedCount} / {partnerMetrics.totalCount}</h3>
+                    </div>
+                  </div>
+                )}
+
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                  <div className="p-4 border-b border-gray-200 bg-gray-50 flex justify-between items-center">
+                    <h3 className="font-bold text-gray-700">📋 {t.historyTab}</h3>
+                    <span className="text-xs bg-gray-200 px-2 py-1 rounded text-gray-700 font-bold">{filteredTransactions.length} items</span>
+                  </div>
+                  
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left text-sm">
+                      <thead className="bg-slate-100 text-slate-600 uppercase text-xs">
+                        <tr>
+                          <th className="p-3">ID / Date</th>
+                          <th className="p-3">Partner Shop</th>
+                          <th className="p-3">Customer & Service</th>
+                          <th className="p-3">Financial Breakdown</th>
+                          <th className="p-3">Status</th>
+                          <th className="p-3">Settlement</th>
+                          {currentRole === 'ADMIN' && <th className="p-3 text-right">{t.actions}</th>}
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-200">
+                        {filteredTransactions.map(tx => {
+                          const shop = shops.find(s => s.id === tx.shopId);
+                          const netMargin = tx.totalCharged - tx.myCost - tx.payoutToOther;
+                          return (
+                            <tr key={tx.id} className="hover:bg-gray-50">
+                              <td className="p-3">
+                                <span className="font-mono text-xs text-indigo-600 font-bold">#{tx.id}</span>
+                                <div className="text-xs text-gray-400">{tx.date}</div>
+                              </td>
+                              <td className="p-3">
+                                <div className="font-semibold text-gray-800">{shop?.name || 'Unknown'}</div>
+                                <span className="text-[10px] px-2 py-0.5 rounded font-bold bg-blue-100 text-blue-800">Inbound Referral</span>
+                              </td>
+                              <td className="p-3">
+                                <div className="font-bold text-gray-900">{tx.customerName}</div>
+                                <div className="text-xs text-gray-500">📞 {tx.phone}</div>
+                                <div className="text-xs text-slate-700 font-medium mt-1">{tx.description}</div>
+                              </td>
+                              <td className="p-3">
+                                <div className="text-xs space-y-0.5">
+                                  <div>{t.custBill} <span className="font-bold">Rs. {tx.totalCharged.toLocaleString()}</span></div>
+                                  {currentRole === 'ADMIN' && <div className="text-gray-500">{t.baseCostLabel} Rs. {tx.myCost.toLocaleString()}</div>}
+                                  <div className="text-amber-700 font-bold">{t.partnerCommLabel} Rs. {tx.payoutToOther.toLocaleString()}</div>
+                                  {currentRole === 'ADMIN' && <div className="text-emerald-600 font-bold border-t pt-0.5">{t.myProfitLabel} Rs. {netMargin.toLocaleString()}</div>}
+                                </div>
+                              </td>
+                              <td className="p-3">
+                                <span className={`px-2 py-1 rounded-full text-xs font-bold ${tx.jobStatus === 'COMPLETED' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>
+                                  {tx.jobStatus === 'COMPLETED' ? t.statusCompleted : t.statusPending}
+                                </span>
+                              </td>
+                              <td className="p-3">
+                                <span className={`px-2 py-1 rounded text-xs font-bold ${tx.isSettled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                                  {tx.isSettled ? `✅ ${t.settledPaid}` : `⏳ ${t.settledUnpaid}`}
+                                </span>
+                              </td>
+                              {currentRole === 'ADMIN' && (
+                                <td className="p-3 text-right">
+                                  <button onClick={() => { if (confirm(t.confirmDeleteTx)) setTransactions(transactions.filter(t => t.id !== tx.id)); }} className="text-red-500 hover:text-red-700 text-xs font-bold">🗑️ Delete</button>
+                                </td>
+                              )}
+                            </tr>
+                          );
+                        })}
+                        {filteredTransactions.length === 0 && (
+                          <tr><td colSpan="7" className="text-center p-8 text-gray-400">No records found.</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* ADD JOB TAB (ADMIN) */}
+            {activeTab === 'addJob' && currentRole === 'ADMIN' && (
+              <div className="max-w-2xl mx-auto bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                <h2 className="text-xl font-bold mb-6 text-gray-800 border-b pb-3">➕ {t.addJobTab}</h2>
+                <form onSubmit={handleAddJob} className="space-y-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.selectPartnerShop}</label>
+                      <select
+                        value={jobForm.shopId}
+                        onChange={(e) => setJobForm({ ...jobForm, shopId: e.target.value })}
+                        className="w-full border rounded-lg p-2 text-sm"
+                        required
+                      >
+                        {shops.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.selectItemFromCatalog}</label>
+                      <select
+                        value={jobForm.itemId}
+                        onChange={(e) => handleCatalogSelect(e.target.value)}
+                        className="w-full border rounded-lg p-2 text-sm"
+                      >
+                        <option value="">{t.customJobOption}</option>
+                        {catalogItems.filter(item => item.shopId === jobForm.shopId).map(item => (
+                          <option key={item.id} value={item.id}>{item.name} (Rs. {item.basePrice})</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.customerName}</label>
+                      <input type="text" required value={jobForm.customerName} onChange={(e) => setJobForm({ ...jobForm, customerName: e.target.value })} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.phone}</label>
+                      <input type="text" value={jobForm.phone} onChange={(e) => setJobForm({ ...jobForm, phone: e.target.value })} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-gray-700 mb-1">{t.jobDesc}</label>
+                    <input type="text" required value={jobForm.description} onChange={(e) => setJobForm({ ...jobForm, description: e.target.value })} className="w-full border rounded-lg p-2 text-sm" />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg border">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.totalCharged}</label>
+                      <input type="number" required value={jobForm.totalCharged} onChange={(e) => setJobForm({ ...jobForm, totalCharged: e.target.value })} className="w-full border rounded-lg p-2 text-sm font-bold text-slate-800" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.myCost}</label>
+                      <input type="number" value={jobForm.myCost} onChange={(e) => setJobForm({ ...jobForm, myCost: e.target.value })} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                  </div>
+
+                  <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
+                    <label className="block text-xs font-bold text-amber-900 mb-2">{t.commCalculation}</label>
+                    <div className="flex gap-4 mb-3">
+                      <label className="flex items-center gap-2 text-xs font-medium cursor-pointer">
+                        <input type="radio" name="commType" value="PERCENT" checked={jobForm.commType === 'PERCENT'} onChange={() => setJobForm({ ...jobForm, commType: 'PERCENT' })} /> {t.percentRate}
+                      </label>
+                      <label className="flex items-center gap-2 text-xs font-medium cursor-pointer">
+                        <input type="radio" name="commType" value="FIXED" checked={jobForm.commType === 'FIXED'} onChange={() => setJobForm({ ...jobForm, commType: 'FIXED' })} /> {t.fixedRs}
+                      </label>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <input type="number" value={jobForm.commValue} onChange={(e) => setJobForm({ ...jobForm, commValue: e.target.value })} className="w-full border rounded-lg p-2 text-sm" />
+                      <div>
+                        <div className="text-xs text-gray-500">{t.payoutAmount}</div>
+                        <div className="text-lg font-extrabold text-amber-700">Rs. {jobForm.payoutToOther.toLocaleString()}</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.jobStatus}</label>
+                      <select value={jobForm.jobStatus} onChange={(e) => setJobForm({ ...jobForm, jobStatus: e.target.value })} className="w-full border rounded-lg p-2 text-sm">
+                        <option value="PENDING">{t.statusPending}</option>
+                        <option value="COMPLETED">{t.statusCompleted}</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.date}</label>
+                      <input type="date" value={jobForm.date} onChange={(e) => setJobForm({ ...jobForm, date: e.target.value })} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                  </div>
+
+                  <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg text-sm shadow mt-4">💾 {t.saveJobBtn}</button>
+                </form>
+              </div>
+            )}
+
+            {/* CATEGORIES TAB */}
+            {activeTab === 'categories' && currentRole === 'ADMIN' && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <h3 className="font-bold mb-4 text-gray-800">➕ {t.addCatTitle}</h3>
+                  <form onSubmit={handleAddCategory} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.catNameLabel}</label>
+                      <input type="text" required value={newCat.name} onChange={(e) => setNewCat({ ...newCat, name: e.target.value })} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.catDescLabel}</label>
+                      <textarea value={newCat.description} onChange={(e) => setNewCat({ ...newCat, description: e.target.value })} className="w-full border rounded-lg p-2 text-sm" rows="3"></textarea>
+                    </div>
+                    <button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-sm">💾 {t.catSaveBtn}</button>
+                  </form>
+                </div>
+                <div className="md:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <h3 className="font-bold mb-4 text-gray-800">📂 {t.existingCats}</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {categories.map(cat => (
+                      <div key={cat.id} className="p-4 border rounded-lg bg-gray-50 relative">
+                        <button onClick={() => setCategories(categories.filter(c => c.id !== cat.id))} className="absolute top-3 right-3 text-red-400 hover:text-red-600 text-xs font-bold">✕</button>
+                        <h4 className="font-bold text-indigo-700 text-sm">{cat.name}</h4>
+                        <p className="text-xs text-gray-500 mt-1">{cat.description || 'No description'}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* CATALOG & SERVICES TAB (Per Shop Services) */}
+            {activeTab === 'catalog' && currentRole === 'ADMIN' && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <h3 className="font-bold mb-4 text-gray-800">➕ {t.addCatalogTitle}</h3>
+                  <form onSubmit={handleAddCatalogItem} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.selectShopForCatalog}</label>
+                      <select value={newCatalog.shopId} onChange={(e) => setNewCatalog({ ...newCatalog, shopId: e.target.value })} className="w-full border rounded-lg p-2 text-sm">
+                        {shops.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.selectCategory}</label>
+                      <select value={newCatalog.categoryId} onChange={(e) => setNewCatalog({ ...newCatalog, categoryId: e.target.value })} className="w-full border rounded-lg p-2 text-sm">
+                        <option value="">-- None --</option>
+                        {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.itemName}</label>
+                      <input type="text" required value={newCatalog.name} onChange={(e) => setNewCatalog({ ...newCatalog, name: e.target.value })} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 mb-1">{t.basePrice}</label>
+                        <input type="number" required value={newCatalog.basePrice} onChange={(e) => setNewCatalog({ ...newCatalog, basePrice: e.target.value })} className="w-full border rounded-lg p-2 text-sm" />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 mb-1">{t.defaultCommRate}</label>
+                        <input type="number" value={newCatalog.defaultCommRate} onChange={(e) => setNewCatalog({ ...newCatalog, defaultCommRate: e.target.value })} className="w-full border rounded-lg p-2 text-sm" />
+                      </div>
+                    </div>
+                    <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-sm">💾 {t.catalogSaveBtn}</button>
+                  </form>
+                </div>
+
+                <div className="md:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <h3 className="font-bold mb-4 text-gray-800">🛍️ {t.shopServicesTitle}</h3>
+                  <div className="space-y-3">
+                    {catalogItems.map(item => {
+                      const shop = shops.find(s => s.id === item.shopId);
+                      const cat = categories.find(c => c.id === item.categoryId);
+                      return (
+                        <div key={item.id} className="p-3 border rounded-lg flex justify-between items-center hover:bg-gray-50">
+                          <div>
+                            <span className="text-xs bg-gray-200 px-2 py-0.5 rounded text-gray-700 mr-2">{shop?.name}</span>
+                            {cat && <span className="text-xs bg-indigo-100 text-indigo-700 px-2 py-0.5 rounded">{cat.name}</span>}
+                            <h4 className="font-bold text-slate-800 text-sm mt-1">{item.name}</h4>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-bold text-emerald-600 text-sm">Rs. {item.basePrice.toLocaleString()}</div>
+                            <div className="text-xs text-amber-600">Comm: {item.defaultCommRate}%</div>
+                            <button onClick={() => setCatalogItems(catalogItems.filter(i => i.id !== item.id))} className="text-red-400 hover:text-red-600 text-xs mt-1">🗑️ Delete</button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SHOPS TAB */}
+            {activeTab === 'shops' && currentRole === 'ADMIN' && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <h3 className="font-bold mb-4 text-gray-800">🏬 {t.addNewsShop}</h3>
+                  <form onSubmit={handleAddShop} className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.shopName}</label>
+                      <input type="text" required value={newShop.name} onChange={(e) => setNewShop({ ...newShop, name: e.target.value })} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.contactPerson}</label>
+                      <input type="text" value={newShop.contactPerson} onChange={(e) => setNewShop({ ...newShop, contactPerson: e.target.value })} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.phone}</label>
+                      <input type="text" value={newShop.phone} onChange={(e) => setNewShop({ ...newShop, phone: e.target.value })} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.defaultCommRate}</label>
+                      <input type="number" value={newShop.defaultCommRate} onChange={(e) => setNewShop({ ...newShop, defaultCommRate: e.target.value })} className="w-full border rounded-lg p-2 text-sm" />
+                    </div>
+                    <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-sm">💾 {t.saveShopBtn}</button>
+                  </form>
+                </div>
+                <div className="md:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <h3 className="font-bold mb-4 text-gray-800">🤝 Registered Partner Profiles</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {shops.map(s => (
+                      <div key={s.id} className="p-4 border rounded-xl bg-slate-50 relative">
+                        <button onClick={() => setShops(shops.filter(x => x.id !== s.id))} className="absolute top-3 right-3 text-red-400 hover:text-red-600 text-xs">✕</button>
+                        <h4 className="font-bold text-slate-800">{s.name}</h4>
+                        <div className="text-xs text-gray-500 mt-1">👤 {s.contactPerson}</div>
+                        <div className="text-xs text-gray-500">📞 {s.phone}</div>
+                        <div className="text-xs font-bold text-amber-700 mt-2">Default Rate: {s.defaultCommRate}%</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* SETTLEMENTS TAB */}
+            {activeTab === 'settlements' && currentRole === 'ADMIN' && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <h3 className="font-bold mb-4 text-gray-800">💳 {t.recordSettlementPayout}</h3>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.selectPartnerShop}</label>
+                      <select value={activePartnerId} onChange={(e) => setActivePartnerId(e.target.value)} className="w-full border rounded-lg p-2 text-sm">
+                        {shops.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-gray-700 mb-1">{t.payoutAmountInput}</label>
+                      <input type="number" placeholder="0.00" value={settleAmount} onChange={(e) => setSettleAmount(e.target.value)} className="w-full border rounded-lg p-2 text-sm font-bold text-emerald-700" />
+                    </div>
+                    <button onClick={() => handleSettlePayout(activePartnerId)} className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-lg text-sm">✅ {t.settleBtn}</button>
+                  </div>
+                </div>
+                <div className="md:col-span-2 bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+                  <h3 className="font-bold mb-4 text-gray-800">🧾 Settlement Payout History Log</h3>
+                  <div className="space-y-3">
+                    {settlements.map(set => {
+                      const shop = shops.find(s => s.id === set.shopId);
+                      return (
+                        <div key={set.id} className="p-3 border rounded-lg bg-emerald-50 border-emerald-200 flex justify-between items-center">
+                          <div>
+                            <h4 className="font-bold text-slate-800 text-sm">{shop?.name}</h4>
+                            <div className="text-xs text-gray-500">{set.date} • {set.notes}</div>
+                          </div>
+                          <div className="text-lg font-extrabold text-emerald-700">Rs. {set.amount.toLocaleString()}</div>
+                        </div>
+                      );
+                    })}
+                    {settlements.length === 0 && <p className="text-gray-400 text-xs">No settlements recorded yet.</p>}
+                  </div>
+                </div>
+              </div>
+            )}
+          </main>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
